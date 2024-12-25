@@ -23,6 +23,7 @@
     "mongoose": "^8.9.2",
     "node-telegram-bot-api": "^0.66.0",
     "nodemon": "^3.1.9",
-    "openai": "^4.77.0"
+    "openai": "^4.77.0",
+    "tiktoken": "^1.0.18"
   }
 }
