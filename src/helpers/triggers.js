@@ -16,4 +16,7 @@ export const trigger = {
     FEEDBACK: '/feedback',
     CANCEL: '/cancel',
   },
+  openai: {
+    newClaim: '/create-claim',
+  },
 };

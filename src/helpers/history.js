@@ -11,3 +11,7 @@ export function addToHistory(userId, message) {
   if (history.length > 5) history.shift();
   return history[userId];
 }
+
+export function clearHistory(userId) {
+  history[userId] = [];
+}

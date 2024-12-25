@@ -1,12 +1,15 @@
-import { addToHistory, getHistory } from '../helpers/history.js';
+import { DEFAULT_GPT_MODEL } from '../helpers/constants.js';
+import { addToHistory, clearHistory, getHistory } from '../helpers/history.js';
 import openai from '../utils/openai.js';
+import { parseAnswer } from '../utils/parseMessage.js';
 import { createPrompt } from '../utils/promptGenerator.js';
 
 const openaiService = {
   async initChatGpt(userId, options = {}) {
     try {
+      clearHistory(userId);
       const response = await openai.chat.completions.create({
-        model: options.model || 'gpt-4',
+        model: options.model || DEFAULT_GPT_MODEL,
         user: `${userId}`,
         store: true,
         messages: [
@@ -17,12 +20,12 @@ const openaiService = {
         temperature: options.temperature || 0.7,
       });
 
-      const choice = response.choices?.[0]?.message?.content;
+      const choice = response.choices?.[0]?.message?.content.trim();
       if (!choice) {
         throw new Error('No response received from ChatGPT');
       }
 
-      return choice.trim();
+      return parseAnswer(choice);
     } catch (error) {
       console.error(
         'Error in askChatGPT:',
@@ -48,43 +51,20 @@ const openaiService = {
       ];
 
       const response = await openai.chat.completions.create({
-        model: options.model || 'gpt-4',
+        model: options.model || DEFAULT_GPT_MODEL,
         user: `${userId}`,
         store: true,
         messages,
         max_tokens: options.maxTokens || 3000,
         temperature: options.temperature || 0.5,
       });
-      const answer = response.choices?.[0]?.message?.content.trim();
-      addToHistory(userId, { role: 'assistant', content: 'answer' });
-      return answer;
+
+      let answer = response.choices?.[0]?.message?.content.trim();
+      addToHistory(userId, { role: 'assistant', content: parseAnswer(answer) });
+      return parseAnswer(answer);
     } catch (error) {
       console.error(
         'Error in askChatGPT:',
-        error.response?.data || error.message,
-      );
-      throw error;
-    }
-  },
-
-  /**
-   * Виконати запит до OpenAI Completion (старіша модель)
-   * @param {String} prompt - Текст запиту
-   * @param {Object} [options] - Додаткові параметри (наприклад, модель або макс. токени)
-   * @returns {Promise<String>} - Відповідь OpenAI Completion
-   */
-  async askCompletion(prompt, options = {}) {
-    try {
-      const response = await openai.createCompletion({
-        model: options.model || 'text-davinci-003', // Модель за замовчуванням
-        prompt,
-        max_tokens: options.maxTokens || 500,
-        temperature: options.temperature || 0.7,
-      });
-      return response.data.choices[0].text.trim();
-    } catch (error) {
-      console.error(
-        'Error in askCompletion:',
         error.response?.data || error.message,
       );
       throw error;
