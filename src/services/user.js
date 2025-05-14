@@ -1,4 +1,4 @@
-import { UserCollection } from '../db/models/user.js';
+import { UserCollection } from '../models/user.js';
 
 const userService = {
   /**
@@ -86,25 +86,6 @@ const userService = {
       return !!user;
     } catch (error) {
       console.error('Error checking if user exists:', error);
-      throw error;
-    }
-  },
-
-  /**
-   * Додати запит до історії користувача
-   * @param {String} userId - Ідентифікатор користувача
-   * @param {String} query - Запит для додавання
-   * @returns {Promise<Object|null>} - Оновлений користувач або null
-   */
-  async addQueryToUser(userId, query) {
-    try {
-      return await UserCollection.findOneAndUpdate(
-        { userId },
-        { $push: { queries: query } },
-        { new: true },
-      );
-    } catch (error) {
-      console.error('Error adding query to user:', error);
       throw error;
     }
   },

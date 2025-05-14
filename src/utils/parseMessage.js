@@ -9,6 +9,7 @@ export function parseAnswer(answer) {
     answer = answer.slice(7, -3);
   }
 
+  answer = answer.replaceAll('**', '');
   return answer;
 }
 

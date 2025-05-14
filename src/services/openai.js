@@ -1,8 +1,8 @@
-import { DEFAULT_GPT_MODEL } from '../helpers/constants.js';
-import { addToHistory, clearHistory, getHistory } from '../helpers/history.js';
-import openai from '../utils/openai.js';
+import openai from '../config/openai.js';
+import { DEFAULT_GPT_MODEL } from '../utils/constants.js';
 import { parseAnswer } from '../utils/parseMessage.js';
 import { createPrompt } from '../utils/promptGenerator.js';
+import { addToHistory, clearHistory, getHistory } from '../utils/history.js';
 
 const openaiService = {
   async initChatGpt(userId, options = {}) {
@@ -13,8 +13,11 @@ const openaiService = {
         user: `${userId}`,
         store: true,
         messages: [
-          { role: 'system', content: createPrompt() },
-          { role: 'user', content: 'Привіт. Що ти вмієш робити?' },
+          { role: 'system', content: createPrompt(options.lang) },
+          {
+            role: 'user',
+            content: 'Привіт, хто ти, як тебе звати і Що ти вмієш робити?',
+          },
         ],
         max_tokens: options.maxTokens || 5000,
         temperature: options.temperature || 0.7,
@@ -46,7 +49,7 @@ const openaiService = {
     try {
       addToHistory(userId, { role: 'user', content: prompt });
       const messages = [
-        { role: 'system', content: createPrompt() },
+        { role: 'system', content: createPrompt(options.lang) },
         ...getHistory(userId),
       ];
 

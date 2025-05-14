@@ -8,11 +8,10 @@ const userSchema = new Schema(
     phone: { type: String }, // Номер телефону користувача
     language: { type: String, default: 'en' },
     registeredAt: { type: Date, default: Date.now },
-    queries: [{ type: String }],
   },
   { timestamps: false },
 );
 
 userSchema.index({ userId: 1 });
 
-export const UserCollection = model('users', userSchema);
+export const UserCollection = model('User', userSchema);

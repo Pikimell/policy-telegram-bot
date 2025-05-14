@@ -8,7 +8,7 @@ export function addToHistory(userId, message) {
 
   history[userId].push(message);
 
-  if (history.length > 5) history.shift();
+  if (history[userId].length > 10) history.shift();
   return history[userId];
 }
 

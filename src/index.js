@@ -1,12 +1,12 @@
-import { initBotControllers } from './controllers/index.js';
-import { dbInfo, initMongoDB } from './db/initMongoDb.js';
+import { dbInfo, initMongoDB } from './config/database.js';
+
+import './commands/index.js';
+import './controllers/index.js';
 
 const init = async () => {
   if (!dbInfo.connected) {
     await initMongoDB();
   }
-
-  initBotControllers();
 };
 
 init();
