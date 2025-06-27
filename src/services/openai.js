@@ -16,7 +16,8 @@ const openaiService = {
           { role: 'system', content: createPrompt(options.lang) },
           {
             role: 'user',
-            content: 'Привіт, хто ти, як тебе звати і Що ти вмієш робити?',
+            content:
+              'Hello, who are you, what is your name and what can you do?',
           },
         ],
         max_tokens: options.maxTokens || 5000,
